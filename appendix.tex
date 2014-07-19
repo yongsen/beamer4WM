@@ -1,0 +1,29 @@
+\section*{Appendix}
+
+\subsection*{Local Mean Power Estimation}
+
+\begin{frame}
+\frametitle{Problem Formulation}
+\begin{block}{1. Propagation Model: ~~~ $p_{r}^{2}(x) = s(x)h(x)$}
+\begin{enumerate}
+  \item Shadowing fading:
+  \begin{equation}
+  s(x) \sim N\left( m(x),\sigma_s^2 \right)
+  \end{equation}
+  \item Multi-path fading:
+  \begin{equation}
+  \begin{split}
+  h(x)=&\underbrace{\frac{1}{\sqrt{1+K}}\lim_{M \to \infty}\frac{1}{\sqrt M}\sum_{m=1}^{M}a_{m}e^{j\left(\frac{2\pi}{\lambda}\cos(\theta_{m}x)+\phi_m\right)}}_{\rm NLOS~Components}\\
+  &+\underbrace{\sqrt{\frac{K}{1+K}}e^{j(\frac{2\pi}{\lambda}\cos(\theta_{0}x+ \phi_0))}}_{\rm LOS~Component}
+  \end{split}
+  \label{rician}
+  \end{equation}
+\end{enumerate}
+\end{block}
+%where $M(x)= K_1+K_2\log(x)$ and $R_{s}(x) = \sigma_{s}^2\exp\left(-\Delta x/x_0\right)$
+%\begin{equation}
+%    f(y;\sigma,\nu)=\frac{y}{\sigma^2}e^{-\frac{y^2+\nu^2}{2\sigma^2}}I_0\left(\frac{y\nu}{\sigma^2}\right)
+%\label{ricianPDF}
+%\end{equation}
+\hyperlink{sect:qa}{\beamergotobutton{Back}}
+\end{frame}

@@ -1,0 +1,194 @@
+
+\usepackage{animate}
+%\usepackage{pgfpages}
+%\setbeameroption{second mode text on second screen=left}
+%\usepackage{CJK}
+%\usepackage{ctex}
+\usepackage[english]{babel}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{textpos}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage[caption=false]{subfig}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{bookmark}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{ulem,tikz}
+\usetikzlibrary{arrows}
+\tikzstyle{block}=[draw opacity=0.7,line width=1.4cm]
+%\usepackage[bottom]{footmisc}
+\usepackage{multimedia}
+\captionsetup{font=scriptsize,labelfont=scriptsize}
+\hypersetup{pdfpagemode=UseNone}
+
+% Define code layout to insert code
+\usepackage{listings}
+\usepackage{color}
+\lstset{
+		language=[GNU]C++,
+		basicstyle=\scriptsize,
+		breaklines=false,
+		xleftmargin=.2in,
+		xrightmargin=.2in,
+		prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+		frame=lines,
+		shwotabs=false,
+		showspaces=false,
+		showstringspaces=false,
+		extendedchars=true,
+		identifierstyle=\ttfamily,
+		keywordstyle=\color{blue!50!red}\bfseries,
+		commentstyle=\color{green!50!black}\itshape,
+		stringstyle=\color{blue},
+		numbers=left,
+		numbersep=5pt,
+		numberstyle=\tiny,
+		captionpos=t,
+		escapeinside={\%*}{*)}
+	   }
+
+% Set citations
+\usepackage{csquotes}
+%\usepackage[style=numeric-comp,autocite=footnote,citetracker=true,maxnames=1,sorting=none,babel=hyphen,hyperref=true,backend=biber]{biblatex}
+\usepackage[style=numeric-comp,autocite=footnote,citetracker=true,maxnames=1,sorting=none]{biblatex}
+%\usepackage[style=verbose,autocite=footnote,citetracker=true,maxnames=1,sorting=none,babel=hyphen,hyperref=true,backend=biber]{biblatex}
+%\setbeamersize{text margin left=8pt,text margin right=8pt}
+
+%\setlength{\skip\footins}{25cm plus 0cm minus 25cm}
+%\setlength{\footnotesep}{0.3cm}
+%\renewcommand*{\bibfont}{\tiny}
+
+\setbeamertemplate{bibliography item}{%
+  \ifboolexpr{ test {\ifentrytype{book}} or test {\ifentrytype{mvbook}}
+    or test {\ifentrytype{collection}} or test {\ifentrytype{mvcollection}}
+    or test {\ifentrytype{reference}} or test {\ifentrytype{mvreference}} }
+    {\setbeamertemplate{bibliography item}[book]}
+    {\ifentrytype{online}
+       {\setbeamertemplate{bibliography item}[online]}
+       {\setbeamertemplate{bibliography item}[article]}}%
+  \usebeamertemplate{bibliography item}}
+
+\defbibenvironment{bibliography}
+  {\list{}
+     {\settowidth{\labelwidth}{\usebeamertemplate{bibliography item}}%
+      \setlength{\leftmargin}{\labelwidth}%
+      \setlength{\labelsep}{\biblabelsep}%
+      \addtolength{\leftmargin}{\labelsep}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\item}
+
+% Settings for footnote and citation
+\DeclareCiteCommand{\footfullcitetext}
+  [\let\thefootnote\relax\mkbibfootnotetext]
+  {\usebibmacro{prenote}}
+  {\mkbibbrackets{\thefield{labelnumber}}%
+   \addnbspace
+   \usedriver
+     {\DeclareNameAlias{sortname}{default}}
+     {\thefield{entrytype}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\makeatletter
+
+%% this stuff fixes the frame numbering in beamer when using an appendix such
+%% that the slides of the appendix are not counted in the total framenumber
+\let\appendixtotalframenumber\empty
+\def\mainend{-1}
+\let\appendixorig\appendix
+
+\def\appendix{
+  \edef\mainend{\theframenumber}
+  \immediate\write\@auxout{\string\global\string\@namedef{mainendframenumber}{\mainend}}
+  \appendixorig
+  \def\inserttotalframenumber{\appendixtotalframenumber}%
+  \setcounter{framenumber}{0}
+}
+
+\def\pageatend{
+  \edef\appendixend{\theframenumber}
+  \ifnum\mainend>0%
+  \immediate\write\@auxout{\string\global\string\@namedef{appendixtotalframenumber}{\appendixend}}%
+  \immediate\write\@auxout{\string\global\string\@namedef{inserttotalframenumber}{\mainend}}%
+  \immediate\write\@auxout{\string\@writefile{nav}{\noexpand \headcommand {%
+        \noexpand \def\noexpand \inserttotalframenumber{\mainend}}}}%
+  \immediate\write\@auxout{\string\@writefile{nav}{\noexpand \headcommand {%
+        \noexpand \def\noexpand \appendixtotalframenumber{\appendixend}}}}%
+  \else
+  \fi
+}
+
+\AtEndDocument{\pageatend}
+
+% Define footnote for block
+\let\cbx@citehook=\empty
+\newtoggle{cbx@blockcite}
+
+\renewcommand{\@makefntext}[1]{%
+  \noindent\normalfont\@thefnmark#1}
+
+\DeclareCiteCommand{\sfcite}[\cbx@superscript]%
+  {\usebibmacro{cite:init}%
+   \let\multicitedelim=\supercitedelim
+   \iffieldundef{prenote}{}{\BibliographyWarning{Ignoring prenote argument}}%
+   \iffieldundef{postnote}{}{\BibliographyWarning{Ignoring postnote argument}}}
+  {\usebibmacro{citeindex}%
+   \ifciteseen
+     {\ifnumequal{\value{page}}{\csuse{cbx@page@\thefield{entrykey}}}
+       {}
+       {\ifnumequal{\value{framenumber}}{\csuse{cbx@frame@\thefield{entrykey}}}
+          {\usebibmacro{sfcite}}
+          {}}}
+     {\usebibmacro{sfcite}}%
+   \usebibmacro{cite:comp}}
+  {}
+  {\usebibmacro{cite:dump}}
+
+\newbibmacro*{sfcite}{%
+  \csnumgdef{cbx@page@\thefield{entrykey}}{\value{page}}%
+  \csnumgdef{cbx@frame@\thefield{entrykey}}{\value{framenumber}}%
+  \xappto\cbx@citehook{%
+    \noexpand\footfullcitetext{\thefield{entrykey}}}}
+
+\newrobustcmd*{\cbx@superscript}[1]{%
+  \mkbibsuperscript{\mkbibbrackets{#1}}%
+  \iftoggle{cbx@blockcite}
+    {}
+    {\cbx@citehook%
+     \global\let\cbx@citehook=\empty}}
+
+\BeforeBeginEnvironment{block}{\global\toggletrue{cbx@blockcite}}
+
+\def\metabox#1{\edef\theprevdepth{\the\prevdepth}\nointerlineskip
+  \vbox to0pt{#1\vss}\prevdepth=\theprevdepth}
+
+\AfterEndEnvironment{block}
+  {\metabox{%
+     \global\togglefalse{cbx@blockcite}%
+     \cbx@citehook%
+     \global\let\cbx@citehook=\empty}}
+
+
+\BeforeBeginEnvironment{exampleblock}{\global\toggletrue{cbx@blockcite}}
+
+\def\metabox#1{\edef\theprevdepth{\the\prevdepth}\nointerlineskip
+  \vbox to0pt{#1\vss}\prevdepth=\theprevdepth}
+
+\AfterEndEnvironment{exampleblock}
+  {\metabox{%
+     \global\togglefalse{cbx@blockcite}%
+     \cbx@citehook%
+     \global\let\cbx@citehook=\empty}}
+
+\AtEveryCitekey{\iffootnote{\tiny}{\color{blue}}{\vspace{-1ex}}}
+\renewcommand*{\footnoterule}{\kern -1pt \hrule \@width 2in \kern 1pt}
+
+\makeatother
